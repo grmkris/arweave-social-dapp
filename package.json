@@ -8,9 +8,27 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.1.2",
+    "@ethersproject/units": "^5.1.0",
+    "@web3-react/abstract-connector": "latest",
+    "@web3-react/authereum-connector": "latest",
+    "@web3-react/core": "latest",
+    "@web3-react/fortmatic-connector": "latest",
+    "@web3-react/frame-connector": "latest",
+    "@web3-react/injected-connector": "latest",
+    "@web3-react/lattice-connector": "latest",
+    "@web3-react/ledger-connector": "latest",
+    "@web3-react/magic-connector": "latest",
+    "@web3-react/network-connector": "latest",
+    "@web3-react/portis-connector": "latest",
+    "@web3-react/torus-connector": "latest",
+    "@web3-react/trezor-connector": "latest",
+    "@web3-react/walletconnect-connector": "latest",
+    "@web3-react/walletlink-connector": "latest",
     "next": "12.0.4",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "web3": "^1.6.1"
   },
   "devDependencies": {
     "@types/node": "16.11.11",
