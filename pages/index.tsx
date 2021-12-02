@@ -107,7 +107,7 @@ function ChainId() {
 function BlockNumber() {
   const { chainId, library } = useWeb3React()
 
-  const [blockNumber, setBlockNumber] = React.useState<number>()
+  const [blockNumber, setBlockNumber] = React.useState<number | null>()
   React.useEffect((): any => {
     if (!!library) {
       let stale = false
@@ -172,7 +172,7 @@ function Account() {
 function Balance() {
   const { account, library, chainId } = useWeb3React()
 
-  const [balance, setBalance] = React.useState()
+  const [balance, setBalance] = React.useState<number | null>()
   React.useEffect((): any => {
     if (!!account && !!library) {
       let stale = false
@@ -266,7 +266,7 @@ function App() {
         }}
       >
         {Object.keys(connectorsByName).map(name => {
-          const currentConnector = connectorsByName[name]
+          const currentConnector = connectorsByName[name as keyof typeof connectorsByName];
           const activating = currentConnector === activatingConnector
           const connected = currentConnector === connector
           const disabled = !triedEager || !!activatingConnector || connected || !!error
@@ -284,7 +284,7 @@ function App() {
               key={name}
               onClick={() => {
                 setActivatingConnector(currentConnector)
-                activate(connectorsByName[name])
+                activate(connectorsByName[name as keyof typeof connectorsByName])
               }}
             >
               <div
