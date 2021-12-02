@@ -29,7 +29,9 @@ import {
   portis,
   torus,
 } from "../connectors";
-import { Spinner } from "../components";
+
+// Components
+import { Spinner, Layout } from "../components";
 
 enum ConnectorNames {
   Injected = "Injected",
@@ -88,9 +90,11 @@ function getLibrary(provider: any): Web3Provider {
 
 export default function Home() {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <App />
-    </Web3ReactProvider>
+    <Layout>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <App />
+      </Web3ReactProvider>
+    </Layout>
   );
 }
 
