@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import {
   Web3ReactProvider,
   useWeb3React,
@@ -11,24 +11,11 @@ import {
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from "@web3-react/frame-connector";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatEther } from "@ethersproject/units";
-
 import { useEagerConnect, useInactiveListener } from "../hooks";
-import {
-  injected,
-  network,
-  walletconnect,
-  walletlink,
-  ledger,
-  trezor,
-  lattice,
-  frame,
-  authereum,
-  fortmatic,
-  magic,
-  portis,
-  torus,
-} from "../connectors";
+import { injected, network, walletconnect, walletlink } from "../connectors";
+
+// Mui
+import Typography from "@mui/material/Typography";
 
 // Components
 import { Spinner, Layout } from "../components";
@@ -38,15 +25,6 @@ enum ConnectorNames {
   Network = "Network",
   WalletConnect = "WalletConnect",
   WalletLink = "WalletLink",
-  Ledger = "Ledger",
-  Trezor = "Trezor",
-  Lattice = "Lattice",
-  Frame = "Frame",
-  Authereum = "Authereum",
-  Fortmatic = "Fortmatic",
-  Magic = "Magic",
-  Portis = "Portis",
-  Torus = "Torus",
 }
 
 const connectorsByName: { [connectorName in ConnectorNames]: any } = {
@@ -54,15 +32,6 @@ const connectorsByName: { [connectorName in ConnectorNames]: any } = {
   [ConnectorNames.Network]: network,
   [ConnectorNames.WalletConnect]: walletconnect,
   [ConnectorNames.WalletLink]: walletlink,
-  [ConnectorNames.Ledger]: ledger,
-  [ConnectorNames.Trezor]: trezor,
-  [ConnectorNames.Lattice]: lattice,
-  [ConnectorNames.Frame]: frame,
-  [ConnectorNames.Authereum]: authereum,
-  [ConnectorNames.Fortmatic]: fortmatic,
-  [ConnectorNames.Magic]: magic,
-  [ConnectorNames.Portis]: portis,
-  [ConnectorNames.Torus]: torus,
 };
 
 function getErrorMessage(error: Error) {
@@ -98,158 +67,6 @@ export default function Home() {
   );
 }
 
-function ChainId() {
-  const { chainId } = useWeb3React();
-
-  return (
-    <>
-      <span>Chain Id</span>
-      <span role="img" aria-label="chain">
-        ⛓
-      </span>
-      <span>{chainId ?? ""}</span>
-    </>
-  );
-}
-
-function BlockNumber() {
-  const { chainId, library } = useWeb3React();
-
-  const [blockNumber, setBlockNumber] = React.useState<number | null>();
-  React.useEffect((): any => {
-    if (!!library) {
-      let stale = false;
-
-      library
-        .getBlockNumber()
-        .then((blockNumber: number) => {
-          if (!stale) {
-            setBlockNumber(blockNumber);
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBlockNumber(null);
-          }
-        });
-
-      const updateBlockNumber = (blockNumber: number) => {
-        setBlockNumber(blockNumber);
-      };
-      library.on("block", updateBlockNumber);
-
-      return () => {
-        stale = true;
-        library.removeListener("block", updateBlockNumber);
-        setBlockNumber(undefined);
-      };
-    }
-  }, [library, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
-
-  return (
-    <>
-      <span>Block Number</span>
-      <span role="img" aria-label="numbers">
-        🔢
-      </span>
-      <span>{blockNumber === null ? "Error" : blockNumber ?? ""}</span>
-    </>
-  );
-}
-
-function Account() {
-  const { account } = useWeb3React();
-
-  return (
-    <>
-      <span>Account</span>
-      <span role="img" aria-label="robot">
-        🤖
-      </span>
-      <span>
-        {account === null
-          ? "-"
-          : account
-          ? `${account.substring(0, 6)}...${account.substring(
-              account.length - 4
-            )}`
-          : ""}
-      </span>
-    </>
-  );
-}
-
-function Balance() {
-  const { account, library, chainId } = useWeb3React();
-
-  const [balance, setBalance] = React.useState<number | null>();
-  React.useEffect((): any => {
-    if (!!account && !!library) {
-      let stale = false;
-
-      library
-        .getBalance(account)
-        .then((balance: any) => {
-          if (!stale) {
-            setBalance(balance);
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBalance(null);
-          }
-        });
-
-      return () => {
-        stale = true;
-        setBalance(undefined);
-      };
-    }
-  }, [account, library, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
-
-  return (
-    <>
-      <span>Balance</span>
-      <span role="img" aria-label="gold">
-        💰
-      </span>
-      <span>
-        {balance === null ? "Error" : balance ? `Ξ${formatEther(balance)}` : ""}
-      </span>
-    </>
-  );
-}
-
-function Header() {
-  const { active, error } = useWeb3React();
-
-  return (
-    <>
-      <h1 style={{ margin: "1rem", textAlign: "center" }}>
-        Welcome to arweave-social-dapp
-      </h1>
-      <h1 style={{ margin: "1rem", textAlign: "right" }}>
-        {active ? "🟢" : error ? "🔴" : "🟠"}
-      </h1>
-      <h3
-        style={{
-          display: "grid",
-          gridGap: "1rem",
-          gridTemplateColumns: "1fr min-content 1fr",
-          maxWidth: "20rem",
-          lineHeight: "2rem",
-          margin: "auto",
-        }}
-      >
-        <ChainId />
-        <BlockNumber />
-        <Account />
-        <Balance />
-      </h3>
-    </>
-  );
-}
-
 function App() {
   const context = useWeb3React<Web3Provider>();
   const {
@@ -264,8 +81,9 @@ function App() {
   } = context;
 
   // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = React.useState<any>();
-  React.useEffect(() => {
+  const [activatingConnector, setActivatingConnector] = useState<any>();
+
+  useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
     }
@@ -279,8 +97,10 @@ function App() {
 
   return (
     <>
-      <Header />
-      <hr style={{ margin: "2rem" }} />
+      <Typography variant="h3">Welcome to the Arweave Social dApp</Typography>
+      <Typography variant="body1">{`Account: ${
+        account ? account : "Connect to view..."
+      }`}</Typography>
       <div
         style={{
           display: "grid",
@@ -379,9 +199,7 @@ function App() {
           </h4>
         )}
       </div>
-
       <hr style={{ margin: "2rem" }} />
-
       <div
         style={{
           display: "grid",
@@ -458,78 +276,6 @@ function App() {
             }}
           >
             Kill WalletLink Session
-          </button>
-        )}
-        {connector === connectorsByName[ConnectorNames.Fortmatic] && (
-          <button
-            style={{
-              height: "3rem",
-              borderRadius: "1rem",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              (connector as any).close();
-            }}
-          >
-            Kill Fortmatic Session
-          </button>
-        )}
-        {connector === connectorsByName[ConnectorNames.Magic] && (
-          <button
-            style={{
-              height: "3rem",
-              borderRadius: "1rem",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              (connector as any).close();
-            }}
-          >
-            Kill Magic Session
-          </button>
-        )}
-        {connector === connectorsByName[ConnectorNames.Portis] && (
-          <>
-            {chainId !== undefined && (
-              <button
-                style={{
-                  height: "3rem",
-                  borderRadius: "1rem",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  (connector as any).changeNetwork(chainId === 1 ? 100 : 1);
-                }}
-              >
-                Switch Networks
-              </button>
-            )}
-            <button
-              style={{
-                height: "3rem",
-                borderRadius: "1rem",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                (connector as any).close();
-              }}
-            >
-              Kill Portis Session
-            </button>
-          </>
-        )}
-        {connector === connectorsByName[ConnectorNames.Torus] && (
-          <button
-            style={{
-              height: "3rem",
-              borderRadius: "1rem",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              (connector as any).close();
-            }}
-          >
-            Kill Torus Session
           </button>
         )}
       </div>
