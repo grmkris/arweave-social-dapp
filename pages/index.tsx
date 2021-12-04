@@ -1,26 +1,40 @@
-import { Web3ReactProvider } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 
 // Mui
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 // Components
 import { Layout } from "../components";
 
+// Utils
+import getErrorMessage from "../utils/getErrorMessage";
+
 export default function Home() {
-  const getLibrary = (provider: any): Web3Provider => {
-    const library = new Web3Provider(provider);
-    library.pollingInterval = 12000;
-    return library;
-  };
+  const { account, error } = useWeb3React();
 
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Layout>
-        <Typography variant="h3" mt={8}>
+    <Layout>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        flexDirection="column"
+      >
+        <Typography variant="h3" mt={8} gutterBottom>
           Welcome to the Arweave Social dApp
         </Typography>
-      </Layout>
-    </Web3ReactProvider>
+        <Typography variant="h5" gutterBottom>
+          {account
+            ? `Your account: ${account}`
+            : "Please connect to a wallet ↗"}
+        </Typography>
+        {!!error && (
+          <Typography variant="body1" color="error">
+            {getErrorMessage(error)}
+          </Typography>
+        )}
+      </Grid>
+    </Layout>
   );
 }

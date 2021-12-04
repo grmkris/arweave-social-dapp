@@ -14,12 +14,8 @@ import Button from "@mui/material/Button";
 // Components
 import DialogWalletOptions from "./DialogWalletOptions";
 
-// Utils
-import getErrorMessage from "../../../utils/getErrorMessage";
-
 export default function AppBar() {
-  const { activate, account, error } = useWeb3React<Web3Provider>();
-  if (!!error) console.log(getErrorMessage(error));
+  const { activate, account, deactivate } = useWeb3React<Web3Provider>();
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
@@ -31,7 +27,7 @@ export default function AppBar() {
 
   const handleClose = (connector: AbstractConnector | undefined) => {
     connector && activate(connector);
-    setOpen(false);
+    return setOpen(false);
   };
 
   return (
@@ -44,7 +40,14 @@ export default function AppBar() {
               Arweave Social dApp
             </Typography>
             {!!account ? (
-              account
+              <Button
+                variant="contained"
+                color="inherit"
+                size="large"
+                onClick={() => deactivate()}
+              >
+                Disconnect
+              </Button>
             ) : (
               <Button
                 variant="contained"
