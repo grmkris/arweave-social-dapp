@@ -22,6 +22,7 @@ export default function Home() {
   });
 
   if (account) {
+    cyberConnect.connect(account);
     console.log(cyberConnect.endpoint);
   }
 
