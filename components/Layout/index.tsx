@@ -5,7 +5,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import Container from "@mui/material/Container";
 
 // Components
-import { NavBar } from "..";
+import NavBar from "./NavBar";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
