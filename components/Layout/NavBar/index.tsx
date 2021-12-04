@@ -1,8 +1,10 @@
+import Image from "next/image";
 import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useEagerConnect, useInactiveListener } from "../../../hooks";
+import _ from "lodash";
+import { SUPPORTED_WALLETS } from "../../../constants/wallets";
 
 // Mui
 import { default as MuiAppBar } from "@mui/material/AppBar";
@@ -14,8 +16,14 @@ import Button from "@mui/material/Button";
 // Components
 import DialogWalletOptions from "./DialogWalletOptions";
 
+// Hooks
+import { useEagerConnect, useInactiveListener } from "../../../hooks";
+
 export default function AppBar() {
-  const { activate, account, deactivate } = useWeb3React<Web3Provider>();
+  const { activate, account, library } = useWeb3React<Web3Provider>();
+  const walletName = library?.connection.url;
+  const walletNameUpperSnake = _.toUpper(_.snakeCase(walletName)); // Convert to match constants keys
+  const walletIcon = SUPPORTED_WALLETS[walletNameUpperSnake]?.iconURL;
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
@@ -38,17 +46,20 @@ export default function AppBar() {
         <MuiAppBar position="static" color="inherit">
           <Toolbar>
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              Arweave Social dApp
+              OurSpace
             </Typography>
             {!!account ? (
-              <Button
-                variant="contained"
-                color="inherit"
-                size="large"
-                onClick={() => deactivate()}
-              >
-                Disconnect
-              </Button>
+              <>
+                <Image
+                  src={walletIcon}
+                  alt={`${walletName} icon`}
+                  height={40}
+                  width={40}
+                />
+                <Typography noWrap ml={2} sx={{ maxWidth: 100 }}>
+                  {account}
+                </Typography>
+              </>
             ) : (
               <Button
                 variant="contained"
