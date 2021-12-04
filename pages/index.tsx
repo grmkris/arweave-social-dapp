@@ -1,4 +1,5 @@
-import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
+import { useEffect } from "react";
+import { useWeb3React } from "@web3-react/core";
 
 // Mui
 import Grid from "@mui/material/Grid";
@@ -9,22 +10,15 @@ import { Layout } from "../components";
 
 // Utils
 import getErrorMessage from "../utils/getErrorMessage";
-import CyberConnect, { Blockchain, Env } from "@cyberlab/cyberconnect";
+
+// Hooks
+import { useCyberConnect } from "../hooks";
 
 export default function Home() {
-  const { account, error, library } = useWeb3React();
+  const { account, error } = useWeb3React();
 
-  const cyberConnect = new CyberConnect({
-    namespace: 'CyberConnect',
-    env: Env.PRODUCTION,
-    chain: Blockchain.ETH,
-    provider: library,
-  });
-
-  if (account) {
-    cyberConnect.connect(account);
-    console.log(cyberConnect.endpoint);
-  }
+  const { cyberConnect } = useCyberConnect();
+  console.log(cyberConnect);
 
   return (
     <Layout>

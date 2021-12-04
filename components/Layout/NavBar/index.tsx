@@ -26,7 +26,8 @@ export default function AppBar() {
   const [open, setOpen] = useState(false);
 
   const handleClose = (connector: AbstractConnector | undefined) => {
-    connector && activate(connector);
+    if (connector) activate(connector);
+
     return setOpen(false);
   };
 
