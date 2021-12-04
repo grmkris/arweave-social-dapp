@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cyberlab/cyberconnect": "^2.6.1",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
     "@ethersproject/providers": "^5.1.2",
