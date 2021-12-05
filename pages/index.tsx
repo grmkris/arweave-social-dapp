@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
 
 // Components
-import { Layout, CardAccount } from "../components";
+import { Layout, CardAccount, ErrorMessage } from "../components";
 
 // Utils
 import getErrorMessage from "../utils/getErrorMessage";
@@ -22,16 +22,10 @@ export default function Home() {
 
   const { data, loading, error: queryError } = useQuery(POPULAR_ACCOUNTS);
 
-  const errorMessage = (errorText: string) => (
-    <Typography variant="body1" align="center" color="error">
-      {errorText}
-    </Typography>
-  );
-
   const renderPopularAccounts = () => {
     if (loading) return <LinearProgress />;
-    if (error) return errorMessage(getErrorMessage(error));
-    if (queryError) return errorMessage(queryError?.message);
+    if (error) return <ErrorMessage text={getErrorMessage(error)} />;
+    if (queryError) return <ErrorMessage text={queryError?.message} />;
     if (!data) return null;
 
     return _.orderBy(data.popular.list, ["followerCount"], ["desc"]).map(
@@ -74,12 +68,6 @@ export default function Home() {
         <Typography variant="h5" gutterBottom>
           {`<Insert tag line here>`}
         </Typography>
-
-        {!!error && (
-          <Typography variant="body1" color="error">
-            {getErrorMessage(error)}
-          </Typography>
-        )}
 
         <Typography variant="h4" mt={4} gutterBottom>
           Popular Accounts to Consider Following

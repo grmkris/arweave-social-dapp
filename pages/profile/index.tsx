@@ -8,7 +8,7 @@ import _ from "lodash";
 import Typography from "@mui/material/Typography";
 
 // Components
-import { CardAccount, Layout } from "../../components";
+import { CardAccount, Layout, ErrorMessage } from "../../components";
 
 // Hooks
 import { useCyberConnect } from "../../hooks";
@@ -22,7 +22,28 @@ export default function Profile() {
   const { account } = useWeb3React();
   const { cyberConnect, initializing } = useCyberConnect();
 
-  const { data, loading } = useQuery(RECOMMENDED_ACCOUNTS);
+  const { data, loading, error } = useQuery(RECOMMENDED_ACCOUNTS);
+
+  const renderRecommendedFollows = () => {
+    if (loading) return <LinearProgress />;
+    if (error) return <ErrorMessage text={error?.message} />;
+    if (!data) return null;
+
+    return _.orderBy(
+      data.recommendations.data.list,
+      ["followerCount"],
+      ["desc"]
+    ).map((account) => (
+      <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
+        <CardAccount
+          address={account.address}
+          ens={account.ens ? account.ens : "No ENS"}
+          followerCount={account.followerCount}
+          recommendationReason={account.recommendationReason}
+        />
+      </Grid>
+    ));
+  };
 
   // Redirect to home if no account is found
   useEffect(() => {
@@ -45,33 +66,16 @@ export default function Profile() {
         {account && `Your account: ${account}`}
       </Typography>
 
-      
       <Typography variant="h2" mt={2} mb={2}>
-        Recommended follows:          
+        Recommended follows:
       </Typography>
       {loading ? (
-          <LinearProgress sx={{ width: "100%" }} />
-        ) : (
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            {_.orderBy(data.recommendations.data.list, ["followerCount"], ["desc"]).map(
-              (account) => (
-                <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
-                  <CardAccount
-                    address={account.address}
-                    ens={account.ens ? account.ens : "No ENS"}
-                    followerCount={account.followerCount}
-                    recommendationReason={account.recommendationReason}
-                  />
-                </Grid>
-              )
-            )}
-          </Grid>
-        )}
+        <LinearProgress sx={{ width: "100%" }} />
+      ) : (
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+          {renderRecommendedFollows()}
+        </Grid>
+      )}
     </Layout>
   );
 }
