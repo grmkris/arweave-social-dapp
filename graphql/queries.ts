@@ -17,19 +17,19 @@ export const POPULAR_ACCOUNTS = gql`
 `;
 
 export const RECOMMENDED_ACCOUNTS = gql`
-query {
-  recommendations(address: "$address") {
-    data {
-      list {
-        address
-      	ens
-      	followerCount
-        recommendationReason
-        displayName
+  query {
+    recommendations(address: "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E") {
+      data {
+        list {
+          address
+          ens
+          followerCount
+          recommendationReason
+          displayName
+        }
       }
     }
   }
-}
 `;
 
 export type RecommendedAccount = {
