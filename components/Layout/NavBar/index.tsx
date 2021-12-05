@@ -18,8 +18,10 @@ import DialogWalletOptions from "./DialogWalletOptions";
 
 // Hooks
 import { useEagerConnect, useInactiveListener } from "../../../hooks";
+import { useRouter } from "next/router";
 
 export default function AppBar() {
+  const { push } = useRouter();
   const { activate, account, library } = useWeb3React<Web3Provider>();
   const walletName = library?.connection.url;
   const walletNameUpperSnake = _.toUpper(_.snakeCase(walletName)); // Convert to match constants keys
@@ -45,11 +47,15 @@ export default function AppBar() {
       <Box>
         <MuiAppBar position="fixed" color="inherit">
           <Toolbar>
-            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              OurSpace
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} onClick={() => push("/")}>
+              Ourspace
             </Typography>
+            
             {!!account ? (
               <>
+                <Button variant="contained" style={{ marginRight: "1rem" }}
+                color="secondary"
+                size="large" onClick={() => push("/profile")}>Profile</Button>
                 <Image
                   src={walletIcon}
                   alt={`${walletName} icon`}
