@@ -1,14 +1,20 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
+import _ from "lodash";
+
+// GraphQL
+import { useQuery } from "@apollo/client";
+import { POPULAR_ACCOUNTS } from "../graphql/queries";
 
 // Mui
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import LinearProgress from "@mui/material/LinearProgress";
 
 // Components
-import { Layout } from "../components";
+import { Layout, CardAccount } from "../components";
 
 // Utils
 import getErrorMessage from "../utils/getErrorMessage";
@@ -16,55 +22,17 @@ import getErrorMessage from "../utils/getErrorMessage";
 // Hooks
 import { useCyberConnect } from "../hooks";
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
-} from "@apollo/client";
-import { width } from "@mui/system";
-
 export default function Home() {
   const { push } = useRouter();
 
   const { error } = useWeb3React();
   const { cyberConnect, initializing } = useCyberConnect();
-  const [ popularAccounts, setPopularAccounts ] = useState([]);
 
-  const client = new ApolloClient({
-    uri: 'https://api.cybertino.io/connect/',
-    cache: new InMemoryCache()
-  });
-  
+  const { data, loading } = useQuery(POPULAR_ACCOUNTS);
 
   // Redirect to profile if account is found
   useEffect(() => {
-    // const client = ...
-    client
-    .query({
-      query: gql`
-        query {
-          popular{
-            list {
-              address
-              ens
-              followerCount
-              followStatus {
-                isFollowed
-                isFollowing
-              }
-            }
-          }
-        }
-      `
-    })
-    .then(result => {
-      setPopularAccounts(result.data.popular.list);
-      console.log(result)
-    });
-
-    
+    if (!initializing && cyberConnect) push("/profile");
   }, [cyberConnect, initializing, push]);
 
   return (
@@ -89,7 +57,10 @@ export default function Home() {
         flexDirection="column"
       >
         <Typography variant="h3" mt={8} gutterBottom>
-          Welcome to the Arweave Social dApp
+          Welcome to OurSpace
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          {`<Insert tag line here>`}
         </Typography>
 
         {!!error && (
@@ -97,14 +68,33 @@ export default function Home() {
             {getErrorMessage(error)}
           </Typography>
         )}
+
+        <Typography variant="h4" mt={4} gutterBottom>
+          Popular Accounts to Consider Following
+        </Typography>
+        {loading ? (
+          <LinearProgress sx={{ width: "100%" }} />
+        ) : (
+          <Grid
+            container
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+          >
+            {_.orderBy(data.popular.list, ["followerCount"], ["desc"]).map(
+              (account) => (
+                <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
+                  <CardAccount
+                    address={account.address}
+                    ens={account.ens ? account.ens : "No ENS"}
+                    followerCount={account.followerCount}
+                  />
+                </Grid>
+              )
+            )}
+          </Grid>
+        )}
       </Grid>
-      <h3>Popular accounts</h3>
-      {popularAccounts ? popularAccounts.map(account  => (
-        <div>
-          <h4>{account.ens}</h4>
-          <p>{account.followerCount} followers</p>
-          <p>{account.followStatus.isFollowed ? 'followed' : 'not followed'}</p>  
-        </div>)) : null}
     </Layout>
   );
 }

@@ -2,6 +2,8 @@ import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { ApolloProvider } from "@apollo/client";
+import client from "../graphql/client";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "../theme";
 
@@ -22,10 +24,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </ApolloProvider>
     </Web3ReactProvider>
   );
 }

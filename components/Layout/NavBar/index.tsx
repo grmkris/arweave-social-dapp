@@ -43,7 +43,7 @@ export default function AppBar() {
     <>
       <DialogWalletOptions open={open} onClose={handleClose} />
       <Box>
-        <MuiAppBar position="static" color="inherit">
+        <MuiAppBar position="fixed" color="inherit">
           <Toolbar>
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               OurSpace
