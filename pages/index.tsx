@@ -32,7 +32,7 @@ export default function Home() {
 
   // Redirect to profile if account is found
   useEffect(() => {
-    if (!initializing && cyberConnect) push("/profile");
+    
   }, [cyberConnect, initializing, push]);
 
   return (
