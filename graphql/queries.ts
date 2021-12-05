@@ -16,7 +16,7 @@ export const POPULAR_ACCOUNTS = gql`
   }
 `;
 
-export const RECOMMENDED_ACCOUNtS = gql`
+export const RECOMMENDED_ACCOUNTS = gql`
 query {
   recommendations(address: "$address") {
     data {
