@@ -15,3 +15,19 @@ export const POPULAR_ACCOUNTS = gql`
     }
   }
 `;
+
+export const RECOMMENDED_ACCOUNtS = gql`
+query {
+  recommendations(address: "$address") {
+    data {
+      list {
+        address
+      	ens
+      	followerCount
+        recommendationReason
+        displayName
+      }
+    }
+  }
+}
+`;
