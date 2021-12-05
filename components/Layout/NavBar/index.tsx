@@ -47,15 +47,26 @@ export default function AppBar() {
       <Box>
         <MuiAppBar position="fixed" color="inherit">
           <Toolbar>
-            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} onClick={() => push("/")}>
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ flexGrow: 1, cursor: "pointer" }}
+              onClick={() => push("/")}
+            >
               Ourspace
             </Typography>
-            
+
             {!!account ? (
               <>
-                <Button variant="contained" style={{ marginRight: "1rem" }}
-                color="secondary"
-                size="large" onClick={() => push("/profile")}>Profile</Button>
+                <Button
+                  variant="contained"
+                  style={{ marginRight: "1rem" }}
+                  color="secondary"
+                  size="large"
+                  onClick={() => push("/profile")}
+                >
+                  Profile
+                </Button>
                 <Image
                   src={walletIcon}
                   alt={`${walletName} icon`}

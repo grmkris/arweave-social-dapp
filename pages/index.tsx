@@ -1,6 +1,4 @@
-import { useRouter } from "next/router";
 import Head from "next/head";
-import { useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import _ from "lodash";
 
@@ -19,21 +17,35 @@ import { Layout, CardAccount } from "../components";
 // Utils
 import getErrorMessage from "../utils/getErrorMessage";
 
-// Hooks
-import { useCyberConnect } from "../hooks";
-
 export default function Home() {
-  const { push } = useRouter();
-
   const { error } = useWeb3React();
-  const { cyberConnect, initializing } = useCyberConnect();
 
-  const { data, loading } = useQuery(POPULAR_ACCOUNTS);
+  const { data, loading, error: queryError } = useQuery(POPULAR_ACCOUNTS);
 
-  // Redirect to profile if account is found
-  useEffect(() => {
-    
-  }, [cyberConnect, initializing, push]);
+  const errorMessage = (errorText: string) => (
+    <Typography variant="body1" align="center" color="error">
+      {errorText}
+    </Typography>
+  );
+
+  const renderPopularAccounts = () => {
+    if (loading) return <LinearProgress />;
+    if (error) return errorMessage(getErrorMessage(error));
+    if (queryError) return errorMessage(queryError?.message);
+    if (!data) return null;
+
+    return _.orderBy(data.popular.list, ["followerCount"], ["desc"]).map(
+      (account) => (
+        <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
+          <CardAccount
+            address={account.address}
+            ens={account.ens ? account.ens : "No ENS"}
+            followerCount={account.followerCount}
+          />
+        </Grid>
+      )
+    );
+  };
 
   return (
     <Layout>
@@ -81,17 +93,7 @@ export default function Home() {
             justifyContent="center"
             alignItems="center"
           >
-            {_.orderBy(data.popular.list, ["followerCount"], ["desc"]).map(
-              (account) => (
-                <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
-                  <CardAccount
-                    address={account.address}
-                    ens={account.ens ? account.ens : "No ENS"}
-                    followerCount={account.followerCount}
-                  />
-                </Grid>
-              )
-            )}
+            {renderPopularAccounts()}
           </Grid>
         )}
       </Grid>
