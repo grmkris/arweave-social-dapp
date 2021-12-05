@@ -10,10 +10,11 @@ export type Props = {
   address: string;
   ens: string;
   followerCount: number;
+  recommendationReason?: string;
 };
 
 export default function CardAccount(props: Props) {
-  const { address, ens, followerCount } = props;
+  const { address, ens, followerCount, recommendationReason } = props;
 
   return (
     <Card sx={{ maxWidth: 300 }} elevation={10}>
@@ -26,6 +27,13 @@ export default function CardAccount(props: Props) {
         <Typography variant="body1" gutterBottom>
           {ens}
         </Typography>
+
+        {recommendationReason && (
+          <Typography variant="body1" gutterBottom>
+            <b>Reason:</b> <br></br>
+            {recommendationReason}
+        </Typography>)
+        }
 
         <Typography
           variant="body2"
