@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 import { useWeb3React } from "@web3-react/core";
 import _ from "lodash";
 
@@ -8,6 +9,7 @@ import { POPULAR_ACCOUNTS } from "../graphql/queries";
 
 // Mui
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
 
@@ -62,9 +64,24 @@ export default function Home() {
         alignItems="center"
         flexDirection="column"
       >
-        <Typography variant="h3" mt={8} gutterBottom>
-          Welcome to OurSpace
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h3" mt={8} gutterBottom>
+            Welcome to
+          </Typography>
+          <Image
+            src="/ourspace-logo-full.png"
+            alt="OurSpace Logo"
+            height={125}
+            width={375}
+          />
+        </Box>
         <Typography variant="h5" gutterBottom>
           {`<Insert tag line here>`}
         </Typography>

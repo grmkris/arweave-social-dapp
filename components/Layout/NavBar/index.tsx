@@ -47,14 +47,15 @@ export default function AppBar() {
       <Box>
         <MuiAppBar position="fixed" color="inherit">
           <Toolbar>
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ flexGrow: 1, cursor: "pointer" }}
-              onClick={() => push("/")}
-            >
-              Ourspace
-            </Typography>
+            <Box sx={{ cursor: "pointer" }} onClick={() => push("/")}>
+              <Image
+                src="/ourspace-logo-icon.png"
+                alt="OurSpace Logo"
+                height={50}
+                width={50}
+              />
+            </Box>
+            <Box sx={{ flexGrow: 1 }} />
 
             {!!account ? (
               <>
