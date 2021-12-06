@@ -17,8 +17,8 @@ export const POPULAR_ACCOUNTS = gql`
 `;
 
 export const RECOMMENDED_ACCOUNTS = gql`
-  query {
-    recommendations(address: "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E") {
+  query ($address: String!) {
+    recommendations(address: $address) {
       data {
         list {
           address
@@ -33,20 +33,19 @@ export const RECOMMENDED_ACCOUNTS = gql`
 `;
 
 export type RecommendedAccount = {
-  address: string,
-  ens: string,
-  followerCount: string,
-  recommendationReason: string,
-  displayName: string
+  address: string;
+  ens: string;
+  followerCount: string;
+  recommendationReason: string;
+  displayName: string;
 };
 
-
 export type PopularAccount = {
-  address : string,
-  ens : string,
-  followerCount : string,
-  followStatus : {
-    isFollowed : boolean,
-    isFollowing : boolean
-  },
+  address: string;
+  ens: string;
+  followerCount: string;
+  followStatus: {
+    isFollowed: boolean;
+    isFollowing: boolean;
+  };
 };
