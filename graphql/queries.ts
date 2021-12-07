@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { number } from "prop-types";
 
 export const POPULAR_ACCOUNTS = gql`
   query {

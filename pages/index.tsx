@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Image from "next/image";
-import { useWeb3React } from "@web3-react/core";
 import _ from "lodash";
 
 // GraphQL
@@ -11,37 +10,12 @@ import { POPULAR_ACCOUNTS } from "../graphql/queries";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import LinearProgress from "@mui/material/LinearProgress";
 
 // Components
-import { Layout, CardAccount, ErrorMessage } from "../components";
-
-// Utils
-import getErrorMessage from "../utils/getErrorMessage";
+import { Layout, ListAccounts } from "../components";
 
 export default function Home() {
-  const { error } = useWeb3React();
-
-  const { data, loading, error: queryError } = useQuery(POPULAR_ACCOUNTS);
-
-  const renderPopularAccounts = () => {
-    if (loading) return <LinearProgress />;
-    if (error) return <ErrorMessage text={getErrorMessage(error)} />;
-    if (queryError) return <ErrorMessage text={queryError?.message} />;
-    if (!data) return null;
-
-    return _.orderBy(data.popular.list, ["followerCount"], ["desc"]).map(
-      (account) => (
-        <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
-          <CardAccount
-            address={account.address}
-            ens={account.ens ? account.ens : "No ENS"}
-            followerCount={account.followerCount}
-          />
-        </Grid>
-      )
-    );
-  };
+  const popularAccounts = useQuery(POPULAR_ACCOUNTS);
 
   return (
     <Layout>
@@ -89,18 +63,11 @@ export default function Home() {
         <Typography variant="h4" mt={4} gutterBottom>
           Popular Accounts to Consider Following
         </Typography>
-        {loading ? (
-          <LinearProgress sx={{ width: "100%" }} />
-        ) : (
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            {renderPopularAccounts()}
-          </Grid>
-        )}
+        <ListAccounts
+          type="popular"
+          queryData={popularAccounts}
+          notFoundMessage="Unfortunately no popular accounts were able to be found."
+        />
       </Grid>
     </Layout>
   );

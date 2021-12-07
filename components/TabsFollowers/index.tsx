@@ -30,10 +30,10 @@ export default function TabsFollowers(props: Props) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Item One
+        {followers}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        {following}
       </TabPanel>
     </>
   );

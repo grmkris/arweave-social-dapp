@@ -15,24 +15,21 @@ type QueryData = {
 };
 
 type Props = {
+  type: string;
   queryData: QueryData;
   notFoundMessage: string;
 };
 
 export default function ListAccounts(props: Props) {
-  const { queryData, notFoundMessage } = props;
+  const { type, queryData, notFoundMessage } = props;
 
   const renderAccountsList = ({ data, loading, error }: QueryData) => {
     if (loading) return <LinearProgress />;
     if (error) return <ErrorMessage text={error?.message} />;
     if (!data) return null;
 
-    return data.recommendations.data ? (
-      _.orderBy(
-        data.recommendations.data.list,
-        ["followerCount"],
-        ["desc"]
-      ).map((account) => (
+    return data[type] ? (
+      _.orderBy(data[type].list, ["followerCount"], ["desc"]).map((account) => (
         <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
           <CardAccount
             address={account.address}

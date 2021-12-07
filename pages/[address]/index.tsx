@@ -14,7 +14,10 @@ import { useQuery } from "@apollo/client";
 import { useWeb3React } from "@web3-react/core";
 
 // Queries
-import { RECOMMENDED_ACCOUNTS } from "../../graphql/queries";
+import {
+  RECOMMENDED_ACCOUNTS,
+  ACCOUNT_INFORMATION,
+} from "../../graphql/queries";
 
 export default function Profile() {
   const router = useRouter();
@@ -26,6 +29,12 @@ export default function Profile() {
   const recommendedAccounts = useQuery(RECOMMENDED_ACCOUNTS, {
     variables: { address },
   });
+
+  const accountInformation = useQuery(ACCOUNT_INFORMATION, {
+    variables: { address },
+  });
+
+  console.log(accountInformation);
 
   return (
     <Layout>
@@ -43,12 +52,14 @@ export default function Profile() {
         <Typography variant="h4" align="center" gutterBottom>
           {isOwnAccount ? "My Profile" : account}
         </Typography>
+
         {isOwnAccount && (
           <Grid item xs={12}>
             <Typography variant="h5" gutterBottom align="center">
               Recommended follows
             </Typography>
             <ListAccounts
+              type="recommendations"
               queryData={recommendedAccounts}
               notFoundMessage="Check back here after following some others to get some
               recommendations!"
@@ -57,7 +68,10 @@ export default function Profile() {
         )}
 
         <Grid item xs={12}>
-          {/* <TabsFollowers /> */}
+          <TabsFollowers
+            followers="Followers placeholder"
+            following="Following placeholder"
+          />
         </Grid>
       </Grid>
     </Layout>
