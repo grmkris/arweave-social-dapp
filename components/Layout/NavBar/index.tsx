@@ -64,7 +64,7 @@ export default function AppBar() {
                   style={{ marginRight: "1rem" }}
                   color="secondary"
                   size="large"
-                  onClick={() => push("/profile")}
+                  onClick={() => push(`/${account}`)}
                 >
                   Profile
                 </Button>
