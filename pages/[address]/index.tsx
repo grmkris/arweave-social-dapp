@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { useEffect } from "react";
-import { useWeb3React } from "@web3-react/core";
 import _ from "lodash";
 
 // Mui
@@ -13,18 +11,21 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { CardAccount, Layout, ErrorMessage } from "../../components";
 
 // Hooks
-import { useCyberConnect } from "../../hooks";
 import { useQuery } from "@apollo/client";
+import { useWeb3React } from "@web3-react/core";
+
+// Queries
 import { RECOMMENDED_ACCOUNTS } from "../../graphql/queries";
 
 export default function Profile() {
   const router = useRouter();
+  const { address } = router.query;
 
   const { account } = useWeb3React();
-  const { cyberConnect, initializing } = useCyberConnect();
+  const isOwnAccount = account && account === address;
 
   const { data, loading, error } = useQuery(RECOMMENDED_ACCOUNTS, {
-    variables: { address: account },
+    variables: { address },
   });
 
   const renderRecommendedFollows = () => {
@@ -60,11 +61,6 @@ export default function Profile() {
     );
   };
 
-  // Redirect to home if no account is found
-  useEffect(() => {
-    if (!account || (!initializing && !cyberConnect)) router.push("/");
-  }, [account, cyberConnect, initializing, router]);
-
   return (
     <Layout>
       <Head>
@@ -77,25 +73,24 @@ export default function Profile() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        flexDirection="column"
-      >
-        <Typography variant="h4" mt={8} gutterBottom>
-          Recommended follows
-        </Typography>
-        {loading ? (
-          <LinearProgress sx={{ width: "100%" }} />
-        ) : (
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            {renderRecommendedFollows()}
+      <Grid container flexDirection="column">
+        {isOwnAccount && (
+          <Grid item xs={12}>
+            <Typography variant="h4" mt={8} gutterBottom align="center">
+              Recommended follows
+            </Typography>
+            {loading ? (
+              <LinearProgress sx={{ width: "100%" }} />
+            ) : (
+              <Grid
+                container
+                spacing={2}
+                justifyContent="center"
+                alignItems="center"
+              >
+                {renderRecommendedFollows()}
+              </Grid>
+            )}
           </Grid>
         )}
       </Grid>

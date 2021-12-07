@@ -82,8 +82,8 @@ export default function Home() {
             width={375}
           />
         </Box>
-        <Typography variant="h5" gutterBottom>
-          {`<Insert tag line here>`}
+        <Typography variant="h5" gutterBottom mt={2}>
+          Social Networking for the Permaweb.
         </Typography>
 
         <Typography variant="h4" mt={4} gutterBottom>

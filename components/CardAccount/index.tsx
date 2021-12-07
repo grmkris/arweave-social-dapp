@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 // Mui
 import Card from "@mui/material/Card";
+import Tooltip from "@mui/material/Tooltip";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -19,11 +22,15 @@ export default function CardAccount(props: Props) {
   return (
     <Card sx={{ maxWidth: 300 }} elevation={10}>
       <CardContent sx={{ paddingBottom: 0 }}>
-        <Typography variant="h5" color="primary" noWrap>
-          <a href={`https://etherscan.io/address/${address}`} target="__blank">
-            {address}
+        <Link href={`/${address}`} passHref>
+          <a>
+            <Tooltip title={address}>
+              <Typography variant="h5" color="primary" noWrap>
+                {address}
+              </Typography>
+            </Tooltip>
           </a>
-        </Typography>
+        </Link>
         <Typography variant="body1" gutterBottom>
           {ens}
         </Typography>
@@ -32,8 +39,8 @@ export default function CardAccount(props: Props) {
           <Typography variant="body1" gutterBottom>
             <b>Reason:</b> <br></br>
             {recommendationReason}
-        </Typography>)
-        }
+          </Typography>
+        )}
 
         <Typography
           variant="body2"
