@@ -34,7 +34,7 @@ export default function Profile() {
     variables: { address },
   });
 
-  console.log(accountInformation);
+  console.log(accountInformation.data);
 
   return (
     <Layout>
@@ -50,7 +50,7 @@ export default function Profile() {
 
       <Grid container flexDirection="column" mt={8}>
         <Typography variant="h4" align="center" gutterBottom>
-          {isOwnAccount ? "My Profile" : account}
+          {isOwnAccount ? "My Profile" : address}
         </Typography>
 
         {isOwnAccount && (
