@@ -34,7 +34,7 @@ export const RECOMMENDED_ACCOUNTS = gql`
 
 export const ACCOUNT_INFORMATION = gql`
   query ($address: String!) {
-    recommendations(address: $address) {
+    identity(address: $address) {
       address
       ens
       displayName
