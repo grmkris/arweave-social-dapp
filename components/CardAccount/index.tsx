@@ -8,6 +8,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import PeopleIcon from "@mui/icons-material/People";
+import {useCyberConnect} from "../../hooks";
 
 export type Props = {
   address: string;
@@ -18,6 +19,8 @@ export type Props = {
 
 export default function CardAccount(props: Props) {
   const { address, ens, followerCount, recommendationReason } = props;
+
+  const {cyberConnect, initializing} = useCyberConnect();
 
   return (
     <Card sx={{ maxWidth: 300 }} elevation={10}>
@@ -52,11 +55,13 @@ export default function CardAccount(props: Props) {
           <PeopleIcon sx={{ marginRight: 1 }} /> {followerCount} followers
         </Typography>
       </CardContent>
-      <CardActions sx={{ display: "flex", justifyContent: "center" }}>
-        <Button color="primary" variant="outlined" size="small">
+      {!initializing && <CardActions sx={{ display: "flex", justifyContent: "center" }}>
+        <Button color="primary" variant="outlined" size="small" onClick={() => {
+          cyberConnect?.connect(address);
+        }}>
           Follow
         </Button>
-      </CardActions>
+      </CardActions>}
     </Card>
   );
 }
