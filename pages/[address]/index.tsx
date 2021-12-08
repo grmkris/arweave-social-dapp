@@ -35,6 +35,10 @@ export default function Profile() {
     variables: { address },
   });
 
+  if (!recommendedAccounts.loading ) {
+    console.log(accountInformation.data)
+  }
+
   return (
     <Layout>
       <Head>
