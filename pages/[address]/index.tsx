@@ -1,13 +1,12 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
-import _ from "lodash";
 
 // Mui
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 // Components
-import { Layout, TabsFollowers, ListAccounts } from "../../components";
+import {Layout, TabsFollowers, ListAccounts} from "../../components";
 
 // Hooks
 import { useQuery } from "@apollo/client";
@@ -18,6 +17,8 @@ import {
   RECOMMENDED_ACCOUNTS,
   ACCOUNT_INFORMATION,
 } from "../../graphql/queries";
+import {QueryData} from "../../components/ListAccounts";
+import LinearProgress from "@mui/material/LinearProgress";
 
 export default function Profile() {
   const router = useRouter();
@@ -30,11 +31,9 @@ export default function Profile() {
     variables: { address },
   });
 
-  const accountInformation = useQuery(ACCOUNT_INFORMATION, {
+  const accountInformation : QueryData = useQuery(ACCOUNT_INFORMATION, {
     variables: { address },
   });
-
-  console.log(accountInformation.data);
 
   return (
     <Layout>
@@ -52,6 +51,15 @@ export default function Profile() {
         <Typography variant="h4" align="center" gutterBottom>
           {isOwnAccount ? "My Profile" : address}
         </Typography>
+
+        {accountInformation.loading ?  <LinearProgress /> :
+            <Typography variant="body1" align="center" gutterBottom>
+              {isOwnAccount
+                  ? "This is your profile: " + accountInformation.data
+                  : "This is the profile of " + address + " " + accountInformation.data}
+
+            </Typography>
+        }
 
         {isOwnAccount && (
           <Grid item xs={12}>

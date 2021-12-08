@@ -8,7 +8,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 // Components
 import { CardAccount, ErrorMessage } from "../../components";
 
-type QueryData = {
+export type QueryData = {
   data: any; // change to explicit type,
   loading: boolean;
   error?: any;
