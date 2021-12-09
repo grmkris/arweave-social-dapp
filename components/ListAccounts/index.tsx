@@ -8,28 +8,19 @@ import LinearProgress from "@mui/material/LinearProgress";
 // Components
 import { CardAccount, ErrorMessage } from "../../components";
 
-export type QueryData = {
-  data: any; // change to explicit type,
+type Props = {
+  list: any; // change to explicit type,
   loading: boolean;
   error?: any;
 };
 
-type Props = {
-  type: string;
-  queryData: QueryData;
-  notFoundMessage: string;
-};
-
 export default function ListAccounts(props: Props) {
-  const { type, queryData, notFoundMessage } = props;
-
-  const renderAccountsList = ({ data, loading, error }: QueryData) => {
-    if (loading) return <LinearProgress />;
+  const renderAccountsList = ({ list, loading, error }: Props) => {
+    if (loading) return <LinearProgress sx={{ width: "100%" }} />;
     if (error) return <ErrorMessage text={error?.message} />;
-    if (!data) return null;
 
-    return data[type] ? (
-      _.orderBy(data[type].list, ["followerCount"], ["desc"]).map((account) => (
+    return list && list?.length > 0 ? (
+      _.orderBy(list, ["followerCount"], ["desc"]).map((account) => (
         <Grid item key={account.address} xs={12} sm={6} md={4} lg={3}>
           <CardAccount
             address={account.address}
@@ -44,16 +35,13 @@ export default function ListAccounts(props: Props) {
         <Typography variant="h6" mt={4}>
           🤔 Hmm... no accounts found
         </Typography>
-        <Typography variant="body1">{notFoundMessage}</Typography>
       </Grid>
     );
   };
 
-  return queryData.loading ? (
-    <LinearProgress sx={{ width: "100%" }} />
-  ) : (
+  return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
-      {renderAccountsList(queryData)}
+      {renderAccountsList(props)}
     </Grid>
   );
 }

@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import { Layout, ListAccounts } from "../components";
 
 export default function Home() {
-  const popularAccounts = useQuery(POPULAR_ACCOUNTS);
+  const { data, loading, error } = useQuery(POPULAR_ACCOUNTS);
 
   return (
     <Layout>
@@ -64,9 +64,9 @@ export default function Home() {
           Popular Accounts to Consider Following
         </Typography>
         <ListAccounts
-          type="popular"
-          queryData={popularAccounts}
-          notFoundMessage="Unfortunately no popular accounts were able to be found."
+          list={data?.popular.list}
+          loading={loading}
+          error={error}
         />
       </Grid>
     </Layout>

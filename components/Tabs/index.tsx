@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 
 // Mui
 import Box from "@mui/material/Box";
@@ -9,13 +9,15 @@ import Tab from "@mui/material/Tab";
 import TabPanel from "./TabPanel";
 
 type Props = {
-  followers: any;
-  following: any;
+  followers: ReactNode;
+  following: ReactNode;
+  friends: ReactNode;
+  recommended?: ReactNode;
 };
 
 export default function TabsFollowers(props: Props) {
   const [value, setValue] = useState(0);
-  const { followers, following } = props;
+  const { followers, following, friends, recommended } = props;
 
   return (
     <>
@@ -23,10 +25,12 @@ export default function TabsFollowers(props: Props) {
         <Tabs
           value={value}
           onChange={(_, value) => setValue(value)}
-          aria-label="Followers and followings"
+          aria-label="Followers, followings, and friends"
         >
           <Tab label="Followers" />
           <Tab label="Following" />
+          <Tab label="Friends" />
+          {recommended && <Tab label="Recommended" />}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -35,6 +39,14 @@ export default function TabsFollowers(props: Props) {
       <TabPanel value={value} index={1}>
         {following}
       </TabPanel>
+      <TabPanel value={value} index={2}>
+        {friends}
+      </TabPanel>
+      {recommended && (
+        <TabPanel value={value} index={3}>
+          {recommended}
+        </TabPanel>
+      )}
     </>
   );
 }
