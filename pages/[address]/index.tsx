@@ -1,9 +1,12 @@
+import Image from "next/image";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
 // Mui
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import PeopleIcon from "@mui/icons-material/People";
 
 // Components
 import { Layout, Tabs, ListAccounts } from "../../components";
@@ -28,6 +31,7 @@ export default function Profile() {
   const { data, loading, error } = useQuery(ACCOUNT_INFORMATION, {
     variables: { address },
   });
+
   const Followers = () => {
     return (
       <ListAccounts
@@ -82,9 +86,60 @@ export default function Profile() {
       </Head>
 
       <Grid container flexDirection="column" mt={8}>
-        <Typography variant="h4" align="center" gutterBottom>
-          {isOwnAccount ? "My Profile" : address}
+        <Typography variant="h5" align="center" gutterBottom>
+          {isOwnAccount ? (
+            "My Profile"
+          ) : (
+            <a
+              href={`https://etherscan.io/address/${address}`}
+              target="__blank"
+            >
+              {address} ↗
+            </a>
+          )}
         </Typography>
+
+        <Typography variant="h5" align="center" gutterBottom>
+          {data?.identity?.ens ? data.identity.ens : "No ENS Found"}
+        </Typography>
+
+        <Typography variant="body1" align="center" gutterBottom>
+          {data?.identity?.displayName
+            ? data.identity.displayName
+            : "No Display Name"}
+        </Typography>
+
+        <Typography
+          variant="body1"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          gutterBottom
+        >
+          <PeopleIcon sx={{ marginRight: 1 }} />{" "}
+          {data?.identity?.followerCount ? data?.identity?.followerCount : 0}{" "}
+          followers
+        </Typography>
+
+        {data?.identity?.social?.twitter && (
+          <Box
+            sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <a
+              href={`https://twitter.com/${data.identity.social.twitter}`}
+              target="__blank"
+            >
+              <Image
+                src="/twitter-logo.svg"
+                alt="twitter logo"
+                height={32}
+                width={32}
+              />
+            </a>
+          </Box>
+        )}
 
         <Grid item xs={12}>
           <Tabs
