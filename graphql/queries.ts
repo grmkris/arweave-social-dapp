@@ -2,15 +2,13 @@ import { gql } from "@apollo/client";
 
 export const POPULAR_ACCOUNTS = gql`
   query {
-    popular {
+    popular(tags: { list: [PLAZA] }) {
       list {
         address
         ens
         followerCount
-        followStatus {
-          isFollowed
-          isFollowing
-        }
+        isFollowing
+        followerCount
       }
     }
   }
